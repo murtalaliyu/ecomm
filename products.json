@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Yellow Shoes",
+    "price": 799.99,
+    "image": "",
+    "id": "7cd7b6cc"
+  },
+  {
+    "title": "Leather Leggings",
+    "price": 345.6,
+    "image": "",
+    "id": "1dc155fc"
+  },
+  {
+    "title": "Jacket",
+    "price": 67,
+    "image": "",
+    "id": "484f58f5"
+  },
+  {
+    "title": "White Pants",
+    "price": 944,
+    "image": "",
+    "id": "076c7d69"
+  }
+]
