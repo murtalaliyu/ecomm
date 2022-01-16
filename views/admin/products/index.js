@@ -8,6 +8,7 @@ module.exports = ({ products }) => {
         <td>${product.title}</td>
         <td>${product.price}</td>
         <td>
+        <!-- a tags only make GET requests -->
           <a href="/admin/products/${product.id}/edit">
             <button class="button is-link">
               Edit
@@ -15,7 +16,10 @@ module.exports = ({ products }) => {
           </a>
         </td>
         <td>
-          <button class="button is-danger">Delete</button>
+        <!-- That is why here we're using a form tag -->
+          <form method="POST" action="/admin/products/${product.id}/delete">
+            <button class="button is-danger">Delete</button>
+          </form>
         </td>
       </tr>
     `;
