@@ -1,12 +1,11 @@
 const express = require('express');
-const carts = require('../repositories/carts');
 const cartsRepo = require('../repositories/carts');
+const productsRepo = require('../repositories/products');
+const cartShowTemplate = require('../views/carts/show');
 
 const router = express.Router();
 
-// Receive a POST request to add an item to a cart
-router.post('/cart/products', async (req, res) => {
-  /* sample cart =
+/* sample cart =
     {
       id: 987,
       items: [
@@ -16,6 +15,9 @@ router.post('/cart/products', async (req, res) => {
     }
     (outer id = cartId, inner id = productId)
   */
+
+// Receive a POST request to add an item to a cart
+router.post('/cart/products', async (req, res) => {
 
   // Do we have an existing cart for this user? or do we create a new one for them?
   let cart;
@@ -47,13 +49,38 @@ router.post('/cart/products', async (req, res) => {
   });
 
   // Send response
-  res.send('Product added');
+  res.redirect('/cart');
 });
 
 // Receive a GET request to show all items in cart
+router.get('/cart', async (req, res) => {
+  // make sure user has a cart
+  if (!req.session.cartId) {
+    return res.redirect('/');
+  }
 
+  // get cart from repo
+  const cart = await cartsRepo.getOne(req.session.cartId);
+
+  // iterate over array of items
+  for (let item of cart.items) {
+    // make a request to each item to get objects
+    const product = await productsRepo.getOne(item.id);
+    item.product = product;
+  }
+
+  res.send(cartShowTemplate({ items: cart.items }));
+});
 
 // Receive a POST request to delete an item from a cart
+router.post('/cart/products/delete', async (req, res) => {
+  const { productId } = req.body;
+  const cart = await cartsRepo.getOne(req.session.cartId);
 
+  const items = cart.items.filter(item => item.id !== productId);
+  await cartsRepo.update(req.session.cartId, { items });
+
+  res.redirect('/cart');
+});
 
 module.exports = router;
